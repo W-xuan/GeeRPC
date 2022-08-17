@@ -211,7 +211,6 @@ const (
 	defaultDebugPath = "/debug/geerpc"
 )
 
-// ServeHTTP implements an http.Handler that answers RPC requests.
 func (server *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	if req.Method != "CONNECT" {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
@@ -228,16 +227,12 @@ func (server *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	server.ServeConn(conn)
 }
 
-// HandleHTTP registers an HTTP handler for RPC messages on rpcPath,
-// and a debugging handler on debugPath.
-// It is still necessary to invoke http.Serve(), typically in a go statement.
 func (server *Server) HandleHTTP() {
 	http.Handle(defaultRPCPath, server)
 	http.Handle(defaultDebugPath, debugHTTP{server})
 	log.Println("rpc server debug path:", defaultDebugPath)
 }
 
-// HandleHTTP is a convenient approach for default server to register HTTP handlers
 func HandleHTTP() {
 	DefaultServer.HandleHTTP()
 }

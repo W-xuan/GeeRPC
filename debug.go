@@ -1,7 +1,3 @@
-// Copyright 2009 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
 package geerpc
 
 import (
@@ -41,9 +37,7 @@ type debugService struct {
 	Method map[string]*methodType
 }
 
-// Runs at /debug/geerpc
 func (server debugHTTP) ServeHTTP(w http.ResponseWriter, req *http.Request) {
-	// Build a sorted version of the data.
 	var services []debugService
 	server.serviceMap.Range(func(namei, svci interface{}) bool {
 		svc := svci.(*service)
