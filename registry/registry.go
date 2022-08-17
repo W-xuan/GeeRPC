@@ -21,7 +21,7 @@ type ServerItem struct {
 }
 
 const (
-	defaultPath    = "/_geerpc_/rigistry"
+	defaultPath    = "/_geerpc_/registry"
 	defaultTimeout = time.Minute * 5
 )
 
@@ -32,7 +32,7 @@ func New(timeout time.Duration) *GeeRegistry {
 	}
 }
 
-var DefaultGeeRegistry = New(defaultTimeout)
+var DefaultGeeRegister = New(defaultTimeout)
 
 func (r *GeeRegistry) putServer(addr string) {
 	r.mu.Lock()
@@ -82,7 +82,7 @@ func (r *GeeRegistry) HandleHTTP(registryPath string) {
 }
 
 func HandleHTTP() {
-	DefaultGeeRegistry.HandleHTTP(defaultPath)
+	DefaultGeeRegister.HandleHTTP(defaultPath)
 }
 
 func Heartbeat(registry, addr string, duration time.Duration) {
@@ -90,17 +90,17 @@ func Heartbeat(registry, addr string, duration time.Duration) {
 		duration = defaultTimeout - time.Duration(1)*time.Minute
 	}
 	var err error
-	err = sendHearbeat(registry, addr)
+	err = sendHeartbeat(registry, addr)
 	go func() {
 		t := time.NewTicker(duration)
 		for err == nil {
 			<-t.C
-			err = sendHearbeat(registry, addr)
+			err = sendHeartbeat(registry, addr)
 		}
 	}()
 }
 
-func sendHearbeat(registry, addr string) error {
+func sendHeartbeat(registry, addr string) error {
 	log.Println(addr, "send heart beat to registry", registry)
 	httpClient := &http.Client{}
 	req, _ := http.NewRequest("POST", registry, nil)
